@@ -91,7 +91,24 @@ function checkXWins(rowIdx, colIdx) {
         if((rowAndFlag === 1 && sumRow === 3) || (colAndFlag === 1 && sumCol === 3)) {
             winner.innerHTML = "X Wins!";
             gameOver = true;
-            break;
+            return;
+        }
+    }
+    // Check for diagonal
+    let diagAndFlag = 1;
+    let diagSum = 0;
+    let invDiagFlag = 1;
+    let invDiagSum = 0;
+    for(let idx = 0; idx < GRID_LENGTH; idx++) {
+        diagAndFlag &= grid[idx][idx];
+        diagSum += grid[idx][idx];
+        invDiagFlag &= grid[idx][GRID_LENGTH - idx - 1];
+        invDiagSum += grid[idx][GRID_LENGTH - idx - 1];
+        console.log(invDiagSum, invDiagFlag);
+        if((diagAndFlag === 1 && diagSum === GRID_LENGTH) || (invDiagFlag === 1 && invDiagSum === GRID_LENGTH)) {
+            winner.innerHTML = "X Wins!";
+            gameOver = true;
+            return;
         }
     }   
 }
@@ -109,7 +126,24 @@ function checkOWins(rowIdx, colIdx) {
         if((rowAndFlag === 2 && sumRow === 6) || (colAndFlag === 2 && sumCol === 6)) {
             winner.innerHTML = "O Wins!";
             gameOver = true;
-            break;
+            return;
+        }
+    }
+    // Check for diagonal
+    let diagAndFlag = 2;
+    let diagSum = 0;
+    let invDiagFlag = 2;
+    let invDiagSum = 0;
+    for(let idx = 0; idx < GRID_LENGTH; idx++) {
+        diagAndFlag &= grid[idx][idx];
+        diagSum += grid[idx][idx];
+        invDiagFlag &= grid[idx][GRID_LENGTH - idx - 1];
+        invDiagSum += grid[idx][GRID_LENGTH - idx - 1];
+        console.log(invDiagSum, invDiagFlag);
+        if((diagAndFlag === 2 && diagSum === 2*GRID_LENGTH) || (invDiagFlag === 2 && invDiagSum === 2*GRID_LENGTH)) {
+            winner.innerHTML = "0 Wins!";
+            gameOver = true;
+            return;
         }
     }   
 }
@@ -127,7 +161,7 @@ function onBoxClick() {
         grid[colIdx][rowIdx] = newValue;
         turn = !turn;
     }
-    console.log(colIdx, rowIdx);
+    
     renderMainGrid();
     addClickHandlers();
 
