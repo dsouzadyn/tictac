@@ -50,3 +50,8 @@
     border-radius: 5px;
     line-height: 100px;
 }
+
+.winner {
+    width: 100%;
+    text-align: center;
+}

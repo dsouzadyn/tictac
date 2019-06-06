@@ -19,7 +19,9 @@
 
 const grid = [];
 const GRID_LENGTH = 3;
-let turn = 'X';
+let turn = true; // True -> X, False -> O
+let gameOver = false;
+const winner = document.getElementById("winner");
 
 function initializeGrid() {
     for (let colIdx = 0;colIdx < GRID_LENGTH; colIdx++) {
@@ -67,16 +69,70 @@ function getColumns() {
 function renderMainGrid() {
     const parent = document.getElementById("grid");
     const columnDivs = getColumns();
-    parent.innerHTML = '<div class="columnsStyle">' + columnDivs + '</div>';
+    parent.innerHTML = '<div class="columsStyle">' + columnDivs + '</div>';
+}
+
+function printGrid() {
+    for(let cols = 0; cols < GRID_LENGTH; cols++) {
+        console.log(grid[cols]);
+    }
+}
+
+function checkXWins(rowIdx, colIdx) {
+    let rowAndFlag = 1;
+    let colAndFlag = 1;
+    let sumRow = 0;
+    let sumCol = 0;
+    for(let idx = 0; idx < GRID_LENGTH; idx++) {
+        rowAndFlag &= grid[colIdx][idx];
+        sumRow += grid[colIdx][idx];
+        colAndFlag &= grid[idx][rowIdx];
+        sumCol += grid[idx][rowIdx];
+        if((rowAndFlag === 1 && sumRow === 3) || (colAndFlag === 1 && sumCol === 3)) {
+            winner.innerHTML = "X Wins!";
+            gameOver = true;
+            break;
+        }
+    }   
+}
+
+function checkOWins(rowIdx, colIdx) {
+    let rowAndFlag = 2;
+    let colAndFlag = 2;
+    let sumRow = 0;
+    let sumCol = 0;
+    for(let idx = 0; idx < GRID_LENGTH; idx++) {
+        rowAndFlag &= grid[colIdx][idx];
+        sumRow += grid[colIdx][idx];
+        colAndFlag &= grid[idx][rowIdx];
+        sumCol += grid[idx][rowIdx];
+        if((rowAndFlag === 2 && sumRow === 6) || (colAndFlag === 2 && sumCol === 6)) {
+            winner.innerHTML = "O Wins!";
+            gameOver = true;
+            break;
+        }
+    }   
 }
 
 function onBoxClick() {
     var rowIdx = this.getAttribute("rowIdx");
     var colIdx = this.getAttribute("colIdx");
-    let newValue = 1;
-    grid[colIdx][rowIdx] = newValue;
+    let newValue = -1;
+    if (turn == true) {
+        newValue = 1;
+    } else {
+        newValue = 2;
+    }
+    if (grid[colIdx][rowIdx] === 0 && gameOver == false) {
+        grid[colIdx][rowIdx] = newValue;
+        turn = !turn;
+    }
+    console.log(colIdx, rowIdx);
     renderMainGrid();
     addClickHandlers();
+
+    checkXWins(rowIdx, colIdx);
+    checkOWins(rowIdx, colIdx);
 }
 
 function addClickHandlers() {
